@@ -26,11 +26,33 @@ function playChapterAudio(chapterNum) {
 
     if (typeof chapterSongs !== 'undefined' && chapterSongs[chapterNum]) {
         audioEl.src = chapterSongs[chapterNum];
+        audioEl.play().catch(err => console.log("Audio play blocked until interaction:", err));
     }
-    
-    audioEl.play().catch(err => {
-        console.log("Audio waiting for user interaction:", err);
-    });
+}
+
+function stopChapterAudio() {
+    const audioEl = document.getElementById('bg-music');
+    if (audioEl) {
+        audioEl.pause();
+        audioEl.currentTime = 0; // Reset song to beginning
+    }
+}
+
+// --- Floating Hearts Effect ---
+function createFloatingHearts() {
+    const hearts = ['💖', '✨', '🖤', '🌸', '💫'];
+    for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.left = Math.random() * 80 + 10 + 'vw';
+            heart.style.top = Math.random() * 40 + 50 + 'vh';
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 1600);
+        }, i * 100);
+    }
 }
 
 // --- Interrogation Choice & Countdown Logic ---
@@ -114,7 +136,7 @@ const chapterStories = {
 // --- Modal & Unlocking Logic ---
 function openModal(chapterNum) {
     if (chapterNum > unlockedChapter) {
-        alert("This chapter is locked! Read the previous chapter first.");
+        alert("🔒 Read the unlocked chapter first to open this one!");
         return;
     }
 
@@ -136,6 +158,7 @@ function openModal(chapterNum) {
 
     modal.classList.remove('hidden');
 
+    // Unlock the next chapter after closing or viewing the current one
     if (chapterNum === unlockedChapter && unlockedChapter < 3) {
         unlockedChapter++;
         unlockChapterCard(unlockedChapter);
@@ -153,6 +176,7 @@ function unlockChapterCard(num) {
     if (lockIcon) {
         lockIcon.remove();
     }
+    createFloatingHearts();
 }
 
 function closeModal() {
@@ -160,6 +184,8 @@ function closeModal() {
     if (modal) {
         modal.classList.add('hidden');
     }
+    // Stop playing music when modal is closed
+    stopChapterAudio();
 }
 
 function revealMessageSection() {
