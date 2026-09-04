@@ -3,47 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎉</title>
+    <title>A Question For You 🖤</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <audio id="bg-music" src="song.mp3" preload="auto"></audio>
+    <audio id="bg-music" src="chaar_kadam.mp3" loop preload="auto"></audio>
 
-    <section id="hero-section" class="hero">
-        <div class="hero-content">
-            <h1>Happy Birthday, Yashu! 🎉</h1>
-            <p class="hero-wish">You are genuinely one of the best people in my life. Always stay happy, no matter what—I’m always right here with you through everything.</p>
-            <button id="start-btn" class="stylized-btn glow-effect">Open the First Chapter 🖤</button>
-        </div>
-    </section>
+    <main class="container">
+        <div id="interrogation-box" class="glass-card fade-in">
+            <h1 class="question-heading">[Insert Your Chosen Question Here]</h1>
+            <p class="sub-text">Choose carefully... there is only one right answer. 😉</p>
 
-    <section id="chapters-section" class="chapters hidden">
-        <div class="grid-container">
-            <button class="chapter-btn" onclick="openModal(1)">
-                <span class="chapter-number">I</span>
-                <span class="chapter-title">The Bond</span>
-            </button>
-            <button class="chapter-btn" onclick="openModal(2)">
-                <span class="chapter-number">II</span>
-                <span class="chapter-title">The Protagonist</span>
-            </button>
-            <button class="chapter-btn" onclick="openModal(3)">
-                <span class="chapter-number">III</span>
-                <span class="chapter-title">The Reveal</span>
-            </button>
-        </div>
-        <button id="back-hero-btn" class="secondary-btn">← Back to Wishes</button>
-    </section>
+            <div class="button-group">
+                <button class="option-btn stylized-btn" onclick="handleChoice('yes', this)">Yes</button>
+                <button id="no-btn" class="option-btn secondary-btn">No</button>
+                <button class="option-btn stylized-btn bhot-btn" onclick="handleChoice('bhot-jyaada', this)">Bhot Jyaada 💖</button>
+            </div>
 
-    <div id="modal-overlay" class="modal-overlay hidden">
-        <div class="modal-content glass">
-            <button id="close-btn" class="close-btn" onclick="closeModal()">&times;</button>
-            <h2 id="modal-title">Chapter Title</h2>
-            <p id="modal-text">Chapter text goes here...</p>
+            <div id="countdown-timer" class="countdown-text hidden"></div>
         </div>
-    </div>
+
+        <div id="notes-container" class="hidden">
+            <div id="note-yes" class="glass-card note-card hidden">
+                <h2>I Knew It! ✨</h2>
+                <p class="note-text">no text</p>
+                <button class="stylized-btn continue-btn" onclick="goToChapters()">Continue to Chapters →</button>
+            </div>
+
+            <div id="note-bhot-jyaada" class="glass-card note-card special-note hidden">
+                <div class="glow-sparkle">✨ 🖤 ✨</div>
+                <h2>My Heart Is Yours Always</h2>
+                <p class="note-text special-text">no text</p>
+                <button class="stylized-btn continue-btn special-continue" onclick="goToChapters()">Continue to Chapters →</button>
+            </div>
+        </div>
+    </main>
 
     <script src="script.js"></script>
 </body>
