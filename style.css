@@ -107,7 +107,6 @@ h1, h2, .chapter-number, .question-heading {
     z-index: 100;
 }
 
-/* Selected button pop-out effect */
 .selected-btn {
     transform: scale(1.2) !important;
     box-shadow: 0 0 30px var(--accent-pink) !important;
@@ -127,9 +126,7 @@ h1, h2, .chapter-number, .question-heading {
 }
 
 /* 10x Special Note Styling */
-.note-card {
-    margin-top: 20px;
-}
+.note-card { margin-top: 20px; }
 
 .special-note {
     background: rgba(35, 15, 45, 0.85);
@@ -158,9 +155,7 @@ h1, h2, .chapter-number, .question-heading {
     font-style: italic;
 }
 
-.continue-btn {
-    margin-top: 30px;
-}
+.continue-btn { margin-top: 30px; }
 
 /* Chapters Layout */
 .page-title {
@@ -175,13 +170,14 @@ h1, h2, .chapter-number, .question-heading {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 25px;
     width: 100%;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .chapter-card {
     cursor: pointer;
     transition: all 0.4s ease;
     padding: 35px 20px;
+    position: relative;
 }
 
 .chapter-card:hover {
@@ -190,22 +186,75 @@ h1, h2, .chapter-number, .question-heading {
     box-shadow: 0 12px 30px var(--glow-pink);
 }
 
-.chapter-number {
-    font-size: 2.5rem;
-    color: var(--accent-pink);
-    display: block;
-    margin-bottom: 10px;
+/* Locked Chapter Styling */
+.chapter-card.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(70%);
 }
 
-.chapter-title {
-    font-size: 1rem;
-    letter-spacing: 2px;
-    color: var(--text-main);
+.chapter-card.locked:hover {
+    transform: none;
+    border-color: var(--glass-border);
+    box-shadow: none;
 }
 
-/* Leave a Message Section */
+.lock-icon {
+    position: absolute;
+    top: 15px;
+    right: 18px;
+    font-size: 1.1rem;
+}
+
+/* Glowing Heart Unlock Animation Effect */
+.unlock-glow {
+    animation: unlockHeartPulse 1.3s ease-in-out forwards;
+}
+
+@keyframes unlockHeartPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(232, 165, 178, 0);
+    }
+    50% {
+        transform: scale(1.08);
+        border-color: #ff6b8b;
+        box-shadow: 0 0 45px #ff6b8b, 0 0 70px rgba(232, 165, 178, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 12px 30px var(--glow-pink);
+    }
+}
+
+/* Floating Hearts Celebration Effect */
+.floating-heart {
+    position: fixed;
+    font-size: 1.5rem;
+    pointer-events: none;
+    z-index: 2000;
+    animation: floatUpAndFade 1.6s ease-out forwards;
+}
+
+@keyframes floatUpAndFade {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(0.8) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-110px) scale(1.6) rotate(25deg);
+    }
+}
+
+/* Leave a Message Trigger & Form Section */
+.message-trigger-btn {
+    margin: 10px auto 20px auto;
+}
+
 .message-section {
-    margin-top: 20px;
+    margin-top: 10px;
+    animation: fadeIn 0.6s ease;
 }
 
 .message-section h2 {
@@ -250,7 +299,7 @@ textarea:focus {
     font-weight: bold;
 }
 
-/* Modal Overlay & Scrollable Multi-Paragraph Body */
+/* Modal Overlay & Body */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
