@@ -1,197 +1,181 @@
-/* Base & Typography */
 :root {
-    --bg-dark: #0a0a0c;
-    --text-main: #e0e0e0;
-    --accent-crimson: #8a0303;
-    --accent-glow: rgba(138, 3, 3, 0.6);
-    --glass-bg: rgba(20, 20, 25, 0.65);
-    --glass-border: rgba(138, 3, 3, 0.3);
+    --bg-dark: #0f0a14;
+    --text-main: #f0e6f5;
+    --accent-crimson: #a81c3f;
+    --accent-purple: #5c1d68;
+    --accent-glow: rgba(168, 28, 63, 0.5);
+    --glass-bg: rgba(25, 15, 30, 0.75);
+    --glass-border: rgba(168, 28, 63, 0.4);
 }
 
 body {
     margin: 0;
     padding: 0;
-    background-color: var(--bg-dark);
+    /* Softened pitch black to a deep dark crimson/violet radial gradient */
+    background: radial-gradient(circle at center, #1b0d23 0%, #0a050d 100%);
     color: var(--text-main);
     font-family: 'Lato', sans-serif;
-    overflow: hidden; /* Prevents scrollbars during absolute positioning */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 h1, h2, .chapter-number {
     font-family: 'Playfair Display', serif;
-    font-weight: 400;
-    letter-spacing: 2px;
+    font-weight: 600;
 }
 
-/* Hero Section */
 .hero {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    transition: opacity 1.5s ease-in-out;
+    padding: 20px;
+    max-width: 700px;
 }
 
 .hero h1 {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     color: #ffffff;
-    margin-bottom: 40px;
-    opacity: 0.8;
+    margin-bottom: 15px;
+    text-shadow: 0 0 15px var(--accent-glow);
 }
 
-/* Buttons */
+.hero-wish {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: #d8c2e3;
+    margin-bottom: 35px;
+}
+
 .stylized-btn {
-    background: transparent;
-    color: var(--text-main);
+    background: linear-gradient(135deg, #a81c3f, #5c1d68);
+    color: #ffffff;
     font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    padding: 15px 40px;
-    border: 1px solid var(--accent-crimson);
+    font-size: 1.1rem;
+    padding: 16px 36px;
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
     cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    transition: all 0.4s ease;
-    position: relative;
-    overflow: hidden;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px var(--accent-glow);
 }
 
 .stylized-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px var(--accent-glow);
+}
+
+.secondary-btn {
+    margin-top: 40px;
+    background: transparent;
+    border: 1px solid var(--accent-crimson);
+    color: #c9a6d8;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.secondary-btn:hover {
     background: var(--accent-crimson);
-    color: #fff;
-    box-shadow: 0 0 20px var(--accent-glow);
+    color: white;
 }
 
-/* Keyframe Glow Animation */
-.glow-effect {
-    animation: pulse-glow 3s infinite alternate;
-}
-
-@keyframes pulse-glow {
-    0% { box-shadow: 0 0 5px var(--accent-glow); }
-    100% { box-shadow: 0 0 25px var(--accent-glow), inset 0 0 10px var(--accent-glow); }
-}
-
-/* Chapters Grid */
 .chapters {
     width: 100%;
-    max-width: 900px;
+    max-width: 850px;
     padding: 20px;
-    transition: opacity 1.5s ease-in-out;
+    text-align: center;
 }
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
 }
 
 .chapter-btn {
-    background: #111115;
-    border: 1px solid #333;
-    padding: 40px 20px;
-    width: 100%;
+    background: rgba(20, 10, 25, 0.8);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 35px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    transition: all 0.4s ease;
+    transition: all 0.3s ease;
 }
 
 .chapter-btn:hover {
     border-color: var(--accent-crimson);
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.8), 0 0 15px var(--accent-glow);
+    box-shadow: 0 10px 25px var(--accent-glow);
 }
 
 .chapter-number {
-    font-size: 2.5rem;
-    color: var(--accent-crimson);
-    margin-bottom: 10px;
+    font-size: 2.2rem;
+    color: #e25b7e;
+    margin-bottom: 8px;
 }
 
 .chapter-title {
-    font-family: 'Lato', sans-serif;
-    font-size: 1rem;
-    text-transform: uppercase;
+    font-size: 0.95rem;
     letter-spacing: 2px;
-    color: #aaa;
+    color: #c9a6d8;
+    text-transform: uppercase;
 }
 
-/* Glassmorphism Modal */
+/* Modal Overlay */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease;
-}
-
-.modal-overlay.active {
-    opacity: 1;
-    pointer-events: all;
 }
 
 .glass {
     background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--glass-border);
-    padding: 50px 40px;
-    max-width: 600px;
+    border-radius: 20px;
+    padding: 40px 30px;
+    max-width: 550px;
     width: 85%;
     text-align: center;
     position: relative;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.9);
-    transform: translateY(20px);
-    transition: transform 0.5s ease;
-}
-
-.modal-overlay.active .glass {
-    transform: translateY(0);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.9);
 }
 
 .glass h2 {
-    color: var(--accent-crimson);
-    font-size: 2rem;
+    color: #e25b7e;
+    font-size: 1.8rem;
     margin-top: 0;
-    margin-bottom: 20px;
 }
 
 .glass p {
     font-size: 1.1rem;
-    line-height: 1.8;
-    color: #ddd;
-    font-style: italic;
+    line-height: 1.7;
+    color: #f0e6f5;
 }
 
 .close-btn {
     position: absolute;
-    top: 15px;
-    right: 20px;
+    top: 12px;
+    right: 18px;
     background: transparent;
     border: none;
-    color: #777;
+    color: #aaa;
     font-size: 2rem;
     cursor: pointer;
-    transition: color 0.3s ease;
 }
 
-.close-btn:hover {
-    color: var(--accent-crimson);
-}
-
-/* Utilities */
-.hidden {
-    display: none !important;
-}
+.close-btn:hover { color: var(--accent-crimson); }
+.hidden { display: none !important; }
