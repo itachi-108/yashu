@@ -19,6 +19,20 @@ if (noBtn) {
     noBtn.addEventListener('touchstart', dodgeButton);
 }
 
+// --- Audio Playback Logic ---
+function playChapterAudio(chapterNum) {
+    const audioEl = document.getElementById('bg-music');
+    if (!audioEl) return;
+
+    if (typeof chapterSongs !== 'undefined' && chapterSongs[chapterNum]) {
+        audioEl.src = chapterSongs[chapterNum];
+    }
+    
+    audioEl.play().catch(err => {
+        console.log("Audio waiting for user interaction:", err);
+    });
+}
+
 // --- Interrogation Choice & Countdown Logic ---
 function handleChoice(type, btnElement) {
     playChapterAudio(1);
@@ -33,38 +47,42 @@ function handleChoice(type, btnElement) {
 
     let count = 5;
     const countdownEl = document.getElementById('countdown-timer');
-    countdownEl.classList.remove('hidden');
-    countdownEl.textContent = `Unlocking your note in ${count}...`;
+    if (countdownEl) {
+        countdownEl.classList.remove('hidden');
+        countdownEl.textContent = `Unlocking your note in ${count}...`;
 
-    const timer = setInterval(() => {
-        count--;
-        if (count > 0) {
-            countdownEl.textContent = `Unlocking your note in ${count}...`;
-        } else {
-            clearInterval(timer);
-            
-            document.getElementById('interrogation-box').classList.add('hidden');
-            countdownEl.classList.add('hidden');
+        const timer = setInterval(() => {
+            count--;
+            if (count > 0) {
+                countdownEl.textContent = `Unlocking your note in ${count}...`;
+            } else {
+                clearInterval(timer);
+                
+                const introBox = document.getElementById('interrogation-box');
+                if (introBox) introBox.classList.add('hidden');
+                countdownEl.classList.add('hidden');
 
-            const notesContainer = document.getElementById('notes-container');
-            notesContainer.classList.remove('hidden');
+                const notesContainer = document.getElementById('notes-container');
+                if (notesContainer) notesContainer.classList.remove('hidden');
 
-            if (type === 'yes') {
-                document.getElementById('note-yes').classList.remove('hidden');
-            } else if (type === 'bhot-jyaada') {
-                document.getElementById('note-bhot-jyaada').classList.remove('hidden');
+                if (type === 'yes') {
+                    const noteYes = document.getElementById('note-yes');
+                    if (noteYes) noteYes.classList.remove('hidden');
+                } else if (type === 'bhot-jyaada') {
+                    const noteBhot = document.getElementById('note-bhot-jyaada');
+                    if (noteBhot) noteBhot.classList.remove('hidden');
+                }
             }
-        }
-    }, 1000);
+        }, 1000);
+    }
 }
 
 function goToChapters() {
     window.location.href = 'chapters.html';
 }
 
-// --- Chapter Locking & Multi-Paragraph Content ---
+// --- Chapter Data ---
 let unlockedChapter = 1;
-let currentActiveChapter = null;
 
 const chapterStories = {
     1: {
@@ -95,155 +113,79 @@ const chapterStories = {
 
 // --- Modal & Unlocking Logic ---
 function openModal(chapterNum) {
-    if (chapterNum > unlockedChapter) returnGot you, bro. We can definitely upgrade that UI to match the second image. 
+    if (chapterNum > unlockedChapter) {
+        alert("This chapter is locked! Read the previous chapter first.");
+        return;
+    }
 
-To get that stacked look (Roman numeral on top, title on the bottom) and ensure the unlocked chapters have a permanent, constant glow, we just need to use CSS Flexbox and a specific glowing `box-shadow` for the unlocked state. 
+    const modal = document.getElementById('modal-overlay');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
 
-Here is the 100% complete code. I've put the HTML, CSS, and JavaScript all in one file so you can easily copy, paste, and test it.
+    if (!modal || !chapterStories[chapterNum]) return;
 
-### Part 1: The Structure and Glow Code
+    playChapterAudio(chapterNum);
 
-Create an `index.html` file and paste this in:
+    modalTitle.textContent = chapterStories[chapterNum].title;
+    modalBody.innerHTML = '';
+    chapterStories[chapterNum].paragraphs.forEach(text => {
+        const p = document.createElement('p');
+        p.textContent = text;
+        modalBody.appendChild(p);
+    });
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Story of Us</title>
-    <style>
-        /* Base Page Styling */
-        body {
-            background-color: #0b0612; /* Dark background matching the image */
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+    modal.classList.remove('hidden');
 
-        h1 {
-            font-family: 'Georgia', serif;
-            color: #f4aebf; /* Rose gold text */
-            font-size: 2.5rem;
-            margin-bottom: 40px;
-            text-shadow: 0 0 15px rgba(244, 174, 191, 0.4); /* Slight text glow */
-        }
+    if (chapterNum === unlockedChapter && unlockedChapter < 3) {
+        unlockedChapter++;
+        unlockChapterCard(unlockedChapter);
+    }
+}
 
-        /* Container for the Chapters */
-        .chapter-container {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 40px;
-        }
+function unlockChapterCard(num) {
+    const card = document.getElementById(`chapter-card-${num}`);
+    const lockIcon = document.getElementById(`lock-${num}`);
 
-        /* Base Chapter Card Styling */
-        .chapter-card {
-            background-color: #170d1c;
-            border-radius: 15px;
-            padding: 30px 40px;
-            width: 160px;
-            display: flex;
-            flex-direction: column; /* This stacks the Roman numeral ABOVE the text */
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.4s ease; /* Smooth transition for unlocking */
-            border: 1px solid #2a1b38;
-        }
+    if (card) {
+        card.classList.remove('locked');
+        card.classList.add('unlocked-glow');
+    }
+    if (lockIcon) {
+        lockIcon.remove();
+    }
+}
 
-        .chapter-card .roman {
-            font-family: 'Georgia', serif;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #f4aebf;
-        }
+function closeModal() {
+    const modal = document.getElementById('modal-overlay');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
 
-        .chapter-card .title {
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #f4aebf;
-            text-align: center;
-        }
+function revealMessageSection() {
+    const msgSection = document.getElementById('message-section');
+    const showBtn = document.getElementById('show-msg-btn');
+    
+    if (msgSection) {
+        msgSection.classList.remove('hidden');
+        msgSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (showBtn) {
+        showBtn.classList.add('hidden');
+    }
+}
 
-        /* 🌟 The Constant Glow for Unlocked Chapters 🌟 */
-        .chapter-card.unlocked {
-            border: 1px solid rgba(244, 174, 191, 0.6);
-            /* This box-shadow creates the permanent glow around the box */
-            box-shadow: 0 0 25px rgba(244, 174, 191, 0.3), 
-                        inset 0 0 10px rgba(244, 174, 191, 0.1); 
-        }
-
-        /* Styling for Locked Chapters */
-        .chapter-card.locked {
-            opacity: 0.4;
-            cursor: not-allowed;
-            box-shadow: none; /* No glow while locked */
-            border: 1px solid #2a1b38;
-        }
-
-        .chapter-card.locked .roman, 
-        .chapter-card.locked .title {
-            color: #888888; /* Dim text for locked state */
-        }
-
-        /* Just a quick button to test the unlock feature */
-        .test-btn {
-            padding: 10px 20px;
-            background: linear-gradient(45deg, #c96b86, #8a4875);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-top: 50px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-
-    <h1>The Story of Us</h1>
-
-    <div class="chapter-container">
-        <!-- Chapter 1: Already Unlocked -->
-        <div class="chapter-card unlocked" id="chap1">
-            <span class="roman">I</span>
-            <span class="title">The Bond</span>
-        </div>
-
-        <!-- Chapter 2: Already Unlocked -->
-        <div class="chapter-card unlocked" id="chap2">
-            <span class="roman">II</span>
-            <span class="title">The Protagonist</span>
-        </div>
-
-        <!-- Chapter 3: Locked (Will glow once unlocked) -->
-        <div class="chapter-card locked" id="chap3">
-            <span class="roman">III</span>
-            <span class="title">The Reveal</span>
-        </div>
-    </div>
-
-    <!-- Click this to see the glow activate on Chapter 3 -->
-    <button class="test-btn" onclick="unlockNewChapter()">Unlock Chapter III</button>
-
-    <script>
-        // Function to unlock a new chapter
-        function unlockNewChapter() {
-            let chapter3 = document.getElementById("chap3");
-            
-            // Remove the 'locked' class and add the 'unlocked' class
-            chapter3.classList.remove("locked");
-            chapter3.classList.add("unlocked");
-            
-            // Because CSS handles the visual change, adding the "unlocked" class 
-            // automatically applies the permanent pink glow immediately!
-        }
-    </script>
-</body>
-</html>
+// Form Submission Listener
+document.addEventListener('DOMContentLoaded', () => {
+    const msgForm = document.getElementById('message-form');
+    if (msgForm) {
+        msgForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const feedback = document.getElementById('form-feedback');
+            if (feedback) {
+                feedback.classList.remove('hidden');
+            }
+            msgForm.reset();
+        });
+    }
+});
