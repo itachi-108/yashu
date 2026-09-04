@@ -158,7 +158,7 @@ function openModal(chapterNum) {
 
     modal.classList.remove('hidden');
 
-    // Unlock the next chapter after closing or viewing the current one
+    // Unlock the next chapter after viewing the current one
     if (chapterNum === unlockedChapter && unlockedChapter < 3) {
         unlockedChapter++;
         unlockChapterCard(unlockedChapter);
@@ -201,17 +201,41 @@ function revealMessageSection() {
     }
 }
 
-// Form Submission Listener
+// --- Asynchronous Form Submission Listener ---
 document.addEventListener('DOMContentLoaded', () => {
-    const msgForm = document.getElementById('message-form');
+    const msgForm = document.getElementById('birthday-form');
     if (msgForm) {
-        msgForm.addEventListener('submit', (e) => {
+        msgForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            const feedback = document.getElementById('form-feedback');
-            if (feedback) {
-                feedback.classList.remove('hidden');
-            }
-            msgForm.reset();
+
+            const submitBtn = msgForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending... 💖';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(msgForm);
+
+            fetch(msgForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    msgForm.innerHTML = '<p class="feedback-msg">Your message and audio have been sent successfully! 💖</p>';
+                } else {
+                    alert('Oops! Something went wrong. Please try again.');
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.disabled = false;
+                }
+            })
+            .catch(() => {
+                alert('Oops! Something went wrong. Please try again.');
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+            });
         });
     }
 });
