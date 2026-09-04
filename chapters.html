@@ -42,17 +42,29 @@
             Leave a Message For Me 💌
         </button>
 
-        <!-- Message Section (Initially Hidden) -->
-        <section id="message-section" class="message-section glass-card hidden">
-            <h2>Leave a Message For Me 💌</h2>
-            <p>Tell me your thoughts, feelings, or favorite memory after reading everything...</p>
-            <form id="message-form" class="message-form">
-                <textarea id="user-message" rows="5" placeholder="Write your heart out here, Yashu..." required></textarea>
-                <button type="submit" class="stylized-btn">Send Message to Me 💖</button>
-            </form>
-            <div id="form-feedback" class="feedback-msg hidden">Message saved in my heart! Thank you ✨</div>
-        </section>
-    </main>
+        <!-- Message Section -->
+<section id="message-section" class="message-section glass-card hidden">
+    <h2>Leave a Message For Me 💌</h2>
+    <p>Tell me your thoughts, feelings, or favorite memory after reading everything...</p>
+    
+    <!-- Replace YOUR_EMAIL@gmail.com with your actual email address -->
+    <form action="https://formsubmit.co/YOUR_EMAIL@gmail.com" method="POST" enctype="multipart/form-data" class="message-form">
+        <!-- Disables captcha so submission is instant -->
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_subject" value="New Birthday Message from Yashu! 💖">
+
+        <textarea name="message" rows="5" placeholder="Write your heart out here, Yashu..." required></textarea>
+        
+        <!-- Audio File Upload Input -->
+        <div class="file-upload-wrapper">
+            <label for="audio-file" class="file-label">🎙️ Optional: Attach a Voice Note or Audio File</label>
+            <input type="file" id="audio-file" name="voice_note" accept="audio/*">
+        </div>
+
+        <button type="submit" class="stylized-btn">Send Message to Me 💖</button>
+    </form>
+</section>
 
     <!-- Dynamic Modal Overlay -->
     <div id="modal-overlay" class="modal-overlay hidden">
