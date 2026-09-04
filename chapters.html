@@ -16,17 +16,20 @@
 
         <!-- Chapter Cards Grid -->
         <div class="grid-container">
-            <div id="chapter-card-1" class="chapter-card glass-card" onclick="openModal(1)">
+            <!-- Chapter 1 is unlocked by default and glowing -->
+            <div id="chapter-card-1" class="chapter-card glass-card unlocked-glow" onclick="openModal(1)">
                 <span class="chapter-number">I</span>
                 <span class="chapter-title">THE BOND</span>
             </div>
             
+            <!-- Chapter 2 is locked -->
             <div id="chapter-card-2" class="chapter-card glass-card locked" onclick="openModal(2)">
                 <span id="lock-2" class="lock-icon">🔒</span>
                 <span class="chapter-number">II</span>
                 <span class="chapter-title">THE PROTAGONIST</span>
             </div>
             
+            <!-- Chapter 3 is locked -->
             <div id="chapter-card-3" class="chapter-card glass-card locked" onclick="openModal(3)">
                 <span id="lock-3" class="lock-icon">🔒</span>
                 <span class="chapter-number">III</span>
