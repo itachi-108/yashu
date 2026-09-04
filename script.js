@@ -21,19 +21,16 @@ if (noBtn) {
 
 // --- Interrogation Choice & Countdown Logic ---
 function handleChoice(type, btnElement) {
-    playAudio();
+    playChapterAudio(1);
 
-    // Disable all choice buttons
     const buttons = document.querySelectorAll('.option-btn');
     buttons.forEach(btn => {
         btn.disabled = true;
         btn.style.pointerEvents = 'none';
     });
 
-    // Pop out selected button
     btnElement.classList.add('selected-btn');
 
-    // Countdown logic
     let count = 5;
     const countdownEl = document.getElementById('countdown-timer');
     countdownEl.classList.remove('hidden');
@@ -46,11 +43,9 @@ function handleChoice(type, btnElement) {
         } else {
             clearInterval(timer);
             
-            // Hide interrogation card & countdown
             document.getElementById('interrogation-box').classList.add('hidden');
             countdownEl.classList.add('hidden');
 
-            // Show notes container
             const notesContainer = document.getElementById('notes-container');
             notesContainer.classList.remove('hidden');
 
@@ -67,14 +62,17 @@ function goToChapters() {
     window.location.href = 'chapters.html';
 }
 
-// --- Chapter Content (Supports Multiple Paragraphs) ---
+// --- Chapter Locking & Multi-Paragraph Content ---
+let unlockedChapter = 1;
+let currentActiveChapter = null;
+
 const chapterStories = {
     1: {
         title: "Chapter I: The Bond",
         paragraphs: [
             "You're genuinely the best person in my life. Having you around feels like having the best sister and friend all rolled into one.",
             "I cherish our bond more than you know, Yashu. From random talks to deep late-night conversations, every moment spent talking to you feels special.",
-            "Write your longer story paragraph here..."
+            "Write your story paragraph here..."
         ]
     },
     2: {
@@ -95,16 +93,19 @@ const chapterStories = {
     }
 };
 
-// --- Modal Functions ---
+// --- Modal & Unlocking Logic ---
 function openModal(chapterNum) {
-    playAudio();
+    if (chapterNum > unlockedChapter) return; // Prevent opening locked chapters
+
+    currentActiveChapter = chapterNum;
+    playChapterAudio(chapterNum);
+
     const modalOverlay = document.getElementById('modal-overlay');
     const modalTitle = document.getElementById('modal-title');
     const modalBody = document.getElementById('modal-body');
 
     modalTitle.textContent = chapterStories[chapterNum].title;
     
-    // Inject multiple paragraphs cleanly
     modalBody.innerHTML = chapterStories[chapterNum].paragraphs
         .map(para => `<p>${para}</p>`)
         .join('');
@@ -115,14 +116,64 @@ function openModal(chapterNum) {
 function closeModal() {
     const modalOverlay = document.getElementById('modal-overlay');
     if (modalOverlay) modalOverlay.classList.add('hidden');
+
+    // Unlock next chapter on closing modal
+    if (currentActiveChapter === unlockedChapter && unlockedChapter < 3) {
+        unlockedChapter++;
+        unlockNextChapterCard(unlockedChapter);
+    }
 }
 
-// Close modal when clicking outside glass area
-const modalOverlay = document.getElementById('modal-overlay');
-if (modalOverlay) {
-    modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) closeModal();
-    });
+function unlockNextChapterCard(nextChapterNum) {
+    const card = document.getElementById(`chapter-card-${nextChapterNum}`);
+    const lockIcon = document.getElementById(`lock-${nextChapterNum}`);
+
+    if (card) {
+        card.classList.remove('locked');
+        if (lockIcon) lockIcon.remove();
+
+        // Trigger Glow & Heart Explosion Effect
+        card.classList.add('unlock-glow');
+        triggerHeartBurst(card);
+
+        setTimeout(() => {
+            card.classList.remove('unlock-glow');
+        }, 1500);
+    }
+}
+
+// --- Heart Particles Celebration Effect ---
+function triggerHeartBurst(targetElement) {
+    const rect = targetElement.getBoundingClientRect();
+    const heartSymbols = ['💖', '🖤', '✨', '🌸', '💕'];
+
+    for (let i = 0; i < 12; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('floating-heart');
+        heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+        
+        const randomX = rect.left + (Math.random() * rect.width);
+        const randomY = rect.top + (Math.random() * rect.height);
+        
+        heart.style.left = `${randomX}px`;
+        heart.style.top = `${randomY}px`;
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 1600);
+    }
+}
+
+// --- Reveal Message Section Function ---
+function revealMessageSection() {
+    const msgSection = document.getElementById('message-section');
+    const showMsgBtn = document.getElementById('show-msg-btn');
+
+    if (msgSection) {
+        msgSection.classList.remove('hidden');
+        if (showMsgBtn) showMsgBtn.classList.add('hidden');
+        msgSection.scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
 // --- Leave a Message Form Handling ---
@@ -141,14 +192,27 @@ if (messageForm) {
     });
 }
 
-// --- Music Autoplay Support ---
-function playAudio() {
+// --- Audio Switcher Logic (Uses songs.js) ---
+function playChapterAudio(chapterNum) {
     const bgMusic = document.getElementById('bg-music');
-    if (bgMusic && bgMusic.paused) {
+    if (bgMusic && typeof chapterSongs !== 'undefined' && chapterSongs[chapterNum]) {
+        bgMusic.src = chapterSongs[chapterNum];
         bgMusic.volume = 0.5;
-        bgMusic.play().catch(e => console.log("Audio waiting for user gesture:", e));
+        bgMusic.play().catch(e => console.log("Audio play gesture required:", e));
     }
 }
 
-// Global click trigger to start music if autoplay is blocked
-document.addEventListener('click', playAudio, { once: true });
+// Global click listener to initialize audio
+document.addEventListener('click', () => {
+    const bgMusic = document.getElementById('bg-music');
+    if (bgMusic && bgMusic.paused && bgMusic.src) {
+        bgMusic.play().catch(e => console.log(e));
+    }
+}, { once: true });
+
+const modalOverlay = document.getElementById('modal-overlay');
+if (modalOverlay) {
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+}
