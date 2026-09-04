@@ -173,17 +173,34 @@ h1, h2, .chapter-number, .question-heading {
     margin-bottom: 30px;
 }
 
+/* --- NEW: Updated Card Layout to Stack Roman Numeral and Title --- */
 .chapter-card {
     cursor: pointer;
     transition: all 0.4s ease;
     padding: 35px 20px;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.chapter-card:hover {
+.chapter-number {
+    font-size: 2.5rem;
+    color: var(--accent-pink);
+    margin-bottom: 10px;
+}
+
+.chapter-title {
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: var(--text-main);
+    text-align: center;
+}
+
+/* Hover effect for unlocked cards */
+.chapter-card:not(.locked):hover {
     transform: translateY(-8px);
-    border-color: var(--accent-pink);
-    box-shadow: 0 12px 30px var(--glow-pink);
 }
 
 /* Locked Chapter Styling */
@@ -206,24 +223,18 @@ h1, h2, .chapter-number, .question-heading {
     font-size: 1.1rem;
 }
 
-/* Glowing Heart Unlock Animation Effect */
-.unlock-glow {
-    animation: unlockHeartPulse 1.3s ease-in-out forwards;
+/* --- NEW: Persistent Glow for Unlocked Chapters --- */
+.unlocked-glow {
+    border-color: var(--accent-pink) !important;
+    animation: persistentGlow 2s infinite alternate !important;
 }
 
-@keyframes unlockHeartPulse {
+@keyframes persistentGlow {
     0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 rgba(232, 165, 178, 0);
-    }
-    50% {
-        transform: scale(1.08);
-        border-color: #ff6b8b;
-        box-shadow: 0 0 45px #ff6b8b, 0 0 70px rgba(232, 165, 178, 0.8);
+        box-shadow: 0 0 10px rgba(232, 165, 178, 0.3);
     }
     100% {
-        transform: scale(1);
-        box-shadow: 0 12px 30px var(--glow-pink);
+        box-shadow: 0 0 25px rgba(232, 165, 178, 0.8), inset 0 0 15px rgba(232, 165, 178, 0.3);
     }
 }
 
