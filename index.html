@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Dark Romance For Yashu</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <audio id="bg-music" src="song.mp3"></audio>
+
+    <section id="hero-section" class="hero fade-in">
+        <div class="hero-content">
+            <h1>Every great story has a beginning...</h1>
+            <button id="start-btn" class="stylized-btn glow-effect">Open the First Chapter</button>
+        </div>
+    </section>
+
+    <section id="chapters-section" class="chapters hidden">
+        <div class="grid-container">
+            <button class="chapter-btn" onclick="openModal(1)">
+                <span class="chapter-number">I</span>
+                <span class="chapter-title">The Bond</span>
+            </button>
+            <button class="chapter-btn" onclick="openModal(2)">
+                <span class="chapter-number">II</span>
+                <span class="chapter-title">The Protagonist</span>
+            </button>
+            <button class="chapter-btn" onclick="openModal(3)">
+                <span class="chapter-number">III</span>
+                <span class="chapter-title">The Reveal</span>
+            </button>
+        </div>
+    </section>
+
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal-content glass">
+            <button id="close-btn" class="close-btn" onclick="closeModal()">&times;</button>
+            <h2 id="modal-title">Chapter Title</h2>
+            <p id="modal-text">Chapter text goes here...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
