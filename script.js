@@ -95,124 +95,155 @@ const chapterStories = {
 
 // --- Modal & Unlocking Logic ---
 function openModal(chapterNum) {
-    if (chapterNum > unlockedChapter) return; // Prevent opening locked chapters
+    if (chapterNum > unlockedChapter) returnGot you, bro. We can definitely upgrade that UI to match the second image. 
 
-    currentActiveChapter = chapterNum;
-    playChapterAudio(chapterNum);
+To get that stacked look (Roman numeral on top, title on the bottom) and ensure the unlocked chapters have a permanent, constant glow, we just need to use CSS Flexbox and a specific glowing `box-shadow` for the unlocked state. 
 
-    const modalOverlay = document.getElementById('modal-overlay');
-    const modalTitle = document.getElementById('modal-title');
-    const modalBody = document.getElementById('modal-body');
+Here is the 100% complete code. I've put the HTML, CSS, and JavaScript all in one file so you can easily copy, paste, and test it.
 
-    modalTitle.textContent = chapterStories[chapterNum].title;
-    
-    modalBody.innerHTML = chapterStories[chapterNum].paragraphs
-        .map(para => `<p>${para}</p>`)
-        .join('');
+### Part 1: The Structure and Glow Code
 
-    modalOverlay.classList.remove('hidden');
-}
+Create an `index.html` file and paste this in:
 
-function closeModal() {
-    const modalOverlay = document.getElementById('modal-overlay');
-    if (modalOverlay) modalOverlay.classList.add('hidden');
-
-    // Unlock next chapter on closing modal
-    if (currentActiveChapter === unlockedChapter && unlockedChapter < 3) {
-        unlockedChapter++;
-        unlockNextChapterCard(unlockedChapter);
-    }
-}
-
-function unlockNextChapterCard(nextChapterNum) {
-    const card = document.getElementById(`chapter-card-${nextChapterNum}`);
-    const lockIcon = document.getElementById(`lock-${nextChapterNum}`);
-
-    if (card) {
-        card.classList.remove('locked');
-        if (lockIcon) lockIcon.remove();
-
-        // Trigger Glow & Heart Explosion Effect
-        card.classList.add('unlock-glow');
-        triggerHeartBurst(card);
-
-        setTimeout(() => {
-            card.classList.remove('unlock-glow');
-        }, 1500);
-    }
-}
-
-// --- Heart Particles Celebration Effect ---
-function triggerHeartBurst(targetElement) {
-    const rect = targetElement.getBoundingClientRect();
-    const heartSymbols = ['💖', '🖤', '✨', '🌸', '💕'];
-
-    for (let i = 0; i < 12; i++) {
-        const heart = document.createElement('div');
-        heart.classList.add('floating-heart');
-        heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
-        
-        const randomX = rect.left + (Math.random() * rect.width);
-        const randomY = rect.top + (Math.random() * rect.height);
-        
-        heart.style.left = `${randomX}px`;
-        heart.style.top = `${randomY}px`;
-
-        document.body.appendChild(heart);
-
-        setTimeout(() => heart.remove(), 1600);
-    }
-}
-
-// --- Reveal Message Section Function ---
-function revealMessageSection() {
-    const msgSection = document.getElementById('message-section');
-    const showMsgBtn = document.getElementById('show-msg-btn');
-
-    if (msgSection) {
-        msgSection.classList.remove('hidden');
-        if (showMsgBtn) showMsgBtn.classList.add('hidden');
-        msgSection.scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-// --- Leave a Message Form Handling ---
-const messageForm = document.getElementById('message-form');
-if (messageForm) {
-    messageForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const textarea = document.getElementById('user-message');
-        const feedback = document.getElementById('form-feedback');
-
-        if (textarea.value.trim() !== '') {
-            feedback.classList.remove('hidden');
-            textarea.value = '';
-            setTimeout(() => feedback.classList.add('hidden'), 4000);
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Story of Us</title>
+    <style>
+        /* Base Page Styling */
+        body {
+            background-color: #0b0612; /* Dark background matching the image */
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
         }
-    });
-}
 
-// --- Audio Switcher Logic (Uses songs.js) ---
-function playChapterAudio(chapterNum) {
-    const bgMusic = document.getElementById('bg-music');
-    if (bgMusic && typeof chapterSongs !== 'undefined' && chapterSongs[chapterNum]) {
-        bgMusic.src = chapterSongs[chapterNum];
-        bgMusic.volume = 0.5;
-        bgMusic.play().catch(e => console.log("Audio play gesture required:", e));
-    }
-}
+        h1 {
+            font-family: 'Georgia', serif;
+            color: #f4aebf; /* Rose gold text */
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-shadow: 0 0 15px rgba(244, 174, 191, 0.4); /* Slight text glow */
+        }
 
-// Global click listener to initialize audio
-document.addEventListener('click', () => {
-    const bgMusic = document.getElementById('bg-music');
-    if (bgMusic && bgMusic.paused && bgMusic.src) {
-        bgMusic.play().catch(e => console.log(e));
-    }
-}, { once: true });
+        /* Container for the Chapters */
+        .chapter-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
 
-const modalOverlay = document.getElementById('modal-overlay');
-if (modalOverlay) {
-    modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) closeModal();
-    });
-}
+        /* Base Chapter Card Styling */
+        .chapter-card {
+            background-color: #170d1c;
+            border-radius: 15px;
+            padding: 30px 40px;
+            width: 160px;
+            display: flex;
+            flex-direction: column; /* This stacks the Roman numeral ABOVE the text */
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease; /* Smooth transition for unlocking */
+            border: 1px solid #2a1b38;
+        }
+
+        .chapter-card .roman {
+            font-family: 'Georgia', serif;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #f4aebf;
+        }
+
+        .chapter-card .title {
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #f4aebf;
+            text-align: center;
+        }
+
+        /* 🌟 The Constant Glow for Unlocked Chapters 🌟 */
+        .chapter-card.unlocked {
+            border: 1px solid rgba(244, 174, 191, 0.6);
+            /* This box-shadow creates the permanent glow around the box */
+            box-shadow: 0 0 25px rgba(244, 174, 191, 0.3), 
+                        inset 0 0 10px rgba(244, 174, 191, 0.1); 
+        }
+
+        /* Styling for Locked Chapters */
+        .chapter-card.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: none; /* No glow while locked */
+            border: 1px solid #2a1b38;
+        }
+
+        .chapter-card.locked .roman, 
+        .chapter-card.locked .title {
+            color: #888888; /* Dim text for locked state */
+        }
+
+        /* Just a quick button to test the unlock feature */
+        .test-btn {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #c96b86, #8a4875);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 50px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>The Story of Us</h1>
+
+    <div class="chapter-container">
+        <!-- Chapter 1: Already Unlocked -->
+        <div class="chapter-card unlocked" id="chap1">
+            <span class="roman">I</span>
+            <span class="title">The Bond</span>
+        </div>
+
+        <!-- Chapter 2: Already Unlocked -->
+        <div class="chapter-card unlocked" id="chap2">
+            <span class="roman">II</span>
+            <span class="title">The Protagonist</span>
+        </div>
+
+        <!-- Chapter 3: Locked (Will glow once unlocked) -->
+        <div class="chapter-card locked" id="chap3">
+            <span class="roman">III</span>
+            <span class="title">The Reveal</span>
+        </div>
+    </div>
+
+    <!-- Click this to see the glow activate on Chapter 3 -->
+    <button class="test-btn" onclick="unlockNewChapter()">Unlock Chapter III</button>
+
+    <script>
+        // Function to unlock a new chapter
+        function unlockNewChapter() {
+            let chapter3 = document.getElementById("chap3");
+            
+            // Remove the 'locked' class and add the 'unlocked' class
+            chapter3.classList.remove("locked");
+            chapter3.classList.add("unlocked");
+            
+            // Because CSS handles the visual change, adding the "unlocked" class 
+            // automatically applies the permanent pink glow immediately!
+        }
+    </script>
+</body>
+</html>
