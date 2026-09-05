@@ -31,16 +31,23 @@
             <div id="note-yes" class="glass-card note-card hidden">
                 <h2>I Knew It! ✨</h2>
                 <p class="note-text">You picked 'Yes', but deep down we both know 'Bhot Jyaada Fav' was the real answer...You should’ve clicked that one to see how deep this story actually goes... But don't worry, I already know the truth. 🥀🖤</p>
-                <button class="stylized-btn continue-btn" onclick="goToChapters()">Continue to Chapters →</button>
+                
+                <div class="button-group continue-btn">
+                    <button onclick="goBackToQuestion()" class="secondary-btn">Go Back</button>
+                    <button class="stylized-btn" onclick="goToChapters()">Continue to Chapters →</button>
+                </div>
             </div>
 
             <div id="note-bhot-jyaada" class="glass-card note-card special-note hidden">
                 <div class="glow-sparkle">✨ 🖤 ✨</div>
                 <h2>My Heart Is Yours Always</h2>
-                <p class="note-text special-text">You were never just a distraction... you were the main character I was waiting to find my whole life.
-
-Three years back, I didn't just find a bestiee...I found the answer to a prayer I made as a child for someone cute, understanding, and truly mine. I knew you felt this connection too... it was always you. 🥀🖤"</p>
-                <button class="stylized-btn continue-btn special-continue" onclick="goToChapters()">Continue to Chapters →</button>
+                <p class="note-text special-text">You were never just a distraction... you were the main character I was waiting to find my whole life.<br><br>
+                Three years back, I didn't just find a bestiee...I found the answer to a prayer I made as a child for someone cute, understanding, and truly mine. I knew you felt this connection too... it was always you. 🥀🖤"</p>
+                
+                <div class="button-group continue-btn">
+                    <button onclick="goBackToQuestion()" class="secondary-btn">Go Back</button>
+                    <button class="stylized-btn special-continue" onclick="goToChapters()">Continue to Chapters →</button>
+                </div>
             </div>
         </div>
     </main>
