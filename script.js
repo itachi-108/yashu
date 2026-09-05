@@ -99,6 +99,30 @@ function handleChoice(type, btnElement) {
     }
 }
 
+// --- NEW FUNCTION: GO BACK TO QUESTIONS ---
+function goBackToQuestion() {
+    // Hide the notes container and individual notes
+    const notesContainer = document.getElementById('notes-container');
+    const noteYes = document.getElementById('note-yes');
+    const noteBhot = document.getElementById('note-bhot-jyaada');
+    
+    if (notesContainer) notesContainer.classList.add('hidden');
+    if (noteYes) noteYes.classList.add('hidden');
+    if (noteBhot) noteBhot.classList.add('hidden');
+
+    // Show the interrogation box again
+    const introBox = document.getElementById('interrogation-box');
+    if (introBox) introBox.classList.remove('hidden');
+
+    // Reset the buttons so they can be clicked again
+    const buttons = document.querySelectorAll('.option-btn');
+    buttons.forEach(btn => {
+        btn.disabled = false;
+        btn.style.pointerEvents = 'auto';
+        btn.classList.remove('selected-btn');
+    });
+}
+
 function goToChapters() {
     window.location.href = 'chapters.html';
 }
